@@ -1,14 +1,34 @@
 package com.example.demo;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
+
 public class PagesController {
-    @GetMapping("/math/pi")
-    public String pi(){
-         return "3.141592653589793";
+    private final UserRepository repository;
+    public PagesController(UserRepository repository){
+        this.repository = repository;
     }
 
+    @GetMapping("/users")
+
+    public Iterable<User> getUsers(){
+        return this.repository.findAll();
+    }
+
+    @PostMapping("/users")
+    public User create(@RequestBody User user){
+        return this.repository.save(user);
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUserById(@PathVariable("id") String id) {
+        return this.repository.findByUserId(Long.parseLong(id));
+    }
+    @PatchMapping("/users/{id}")
+    public User updateUser(@PathVariable("id") String id){
+        return this.repository.updateUserById(Long.parseLong(id));
+    }
 }
 
